@@ -1,0 +1,34 @@
+{
+    "name": "snipershady/ratelimiter",
+    "description": "A free and easy-to-use chiper to encrypt and decrypt strings",
+    "keywords": ["securechiper", "iv", "encrypt", "decrypt"],
+    "homepage": "https://www.spinfo.it",
+    "type": "library",
+    "license": "GPL-3.0-or-later",
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "authors": [
+        {
+            "name": "Stefano Perrini",
+            "email": "perrini.stefano@gmail.com",
+            "homepage": "https://www.spinfo.it"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "SecureCipher\\": "src/"
+        }       
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SecureCipher\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "php": ">=8.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.2",
+        "phpstan/phpstan": "^1.10"
+    }
+}
