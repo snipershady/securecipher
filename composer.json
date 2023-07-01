@@ -1,5 +1,5 @@
 {
-    "name": "snipershady/ratelimiter",
+    "name": "snipershady/securecipher",
     "description": "A free and easy-to-use chiper to encrypt and decrypt strings",
     "keywords": ["securechiper", "iv", "encrypt", "decrypt"],
     "homepage": "https://www.spinfo.it",
