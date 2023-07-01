@@ -1,7 +1,7 @@
 {
     "name": "snipershady/securecipher",
     "description": "A free and easy-to-use chiper to encrypt and decrypt strings",
-    "keywords": ["securechiper", "iv", "encrypt", "decrypt"],
+    "keywords": ["securecipher", "iv", "encrypt", "decrypt", "chiper", "cryptography"],
     "homepage": "https://www.spinfo.it",
     "type": "library",
     "license": "GPL-3.0-or-later",
