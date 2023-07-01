@@ -66,9 +66,9 @@ class SecureCipher {
         $this->checkEmptyKey($this->baseKey);
         $firstKey = hash("sha3-512", base64_encode($userKey));
         $secondKey = hash("sha3-512", base64_encode($this->baseKey));
-        $ivLength = openssl_cipher_iv_length($method);
+        $ivLength = (int) openssl_cipher_iv_length($method);
         $iv = openssl_random_pseudo_bytes($ivLength);
-        $firstEncrypted = openssl_encrypt($data, $method, $firstKey, OPENSSL_RAW_DATA, $iv);
+        $firstEncrypted = (string) openssl_encrypt($data, $method, $firstKey, OPENSSL_RAW_DATA, $iv);
         $secondEncrypted = hash_hmac('sha3-512', $firstEncrypted, $secondKey, true);
         $output = base64_encode($iv . $secondEncrypted . $firstEncrypted);
         return $output;
@@ -89,11 +89,11 @@ class SecureCipher {
         $firstKey = hash("sha3-512", base64_encode($userKey));
         $secondKey = hash("sha3-512", base64_encode($this->baseKey));
         $mix = base64_decode($input);
-        $ivLength = openssl_cipher_iv_length($method);
+        $ivLength = (int) openssl_cipher_iv_length($method);
         $iv = substr($mix, 0, $ivLength);
         $secondEncrypted = substr($mix, $ivLength, 64);
         $firstEncrypted = substr($mix, $ivLength + 64);
-        $data = openssl_decrypt($firstEncrypted, $method, $firstKey, OPENSSL_RAW_DATA, $iv);
+        $data = (string) openssl_decrypt($firstEncrypted, $method, $firstKey, OPENSSL_RAW_DATA, $iv);
         $secondEncryptedHm = hash_hmac('sha3-512', $firstEncrypted, $secondKey, true);
 
         if (hash_equals($secondEncrypted, $secondEncryptedHm)) {
