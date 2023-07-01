@@ -4,6 +4,7 @@ namespace SecureCipher\Tests;
 
 use InvalidArgumentException;
 use SecureCipher\Service\SecureCipher;
+use SecureCipher\Enum\CipherMethod;
 
 /*
  * Copyright (C) 2022 Stefano Perrini <perrini.stefano@gmail.com> aka La Matrigna
@@ -31,6 +32,7 @@ use SecureCipher\Service\SecureCipher;
 class ChiperTest extends AbstractTestCase {
 
     public function testBaseString(): void {
+        
         $baseKey = "test1";
         $userKey = "test1uk";
         $sc = new SecureCipher($baseKey);
@@ -147,7 +149,7 @@ class ChiperTest extends AbstractTestCase {
         $userKey = "test1uk";
         $sc = new SecureCipher($baseKey);
         $data = "ForzaNapoli";
-        $method = "aes-128-cbc";
+        $method = CipherMethod::AES_128_CBC->value;// "aes-128-cbc";
         $encryptedData = $sc->encrypt($data, $userKey, $method);
         $retrievedData = $sc->decrypt($encryptedData, $userKey, $method);
 

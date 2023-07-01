@@ -3,6 +3,7 @@
 namespace SecureCipher\Service;
 
 use InvalidArgumentException;
+use SecureCipher\Enum\CipherMethod;
 use const OPENSSL_RAW_DATA;
 use function base64_decode;
 use function base64_encode;
@@ -59,7 +60,7 @@ class SecureCipher {
      * @return string
      * @throws InvalidArgumentException
      */
-    public function encrypt(string $data, string $userKey, string $method = "aes-256-cbc"): string {
+    public function encrypt(string $data, string $userKey, string $method = CipherMethod::AES_256_CBC->value): string {
         $this->checkCipherMethod($method);
         $this->checkEmptyKey($userKey);
         $this->checkEmptyKey($this->baseKey);
@@ -81,7 +82,7 @@ class SecureCipher {
      * @return string
      * @throws InvalidArgumentException
      */
-    public function decrypt(string $input, string $userKey, string $method = "aes-256-cbc"): string {
+    public function decrypt(string $input, string $userKey, string $method = CipherMethod::AES_256_CBC->value): string {
         $this->checkCipherMethod($method);
         $this->checkEmptyKey($userKey);
         $this->checkEmptyKey($this->baseKey);
