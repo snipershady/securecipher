@@ -1,6 +1,9 @@
 # securecipher
 
-A free and easy-to-use string encrypter and decrypter tool
+A free, reliable and easy-to-use cipher to encrypt and decrypt strings
+
+## Context
+You need to encrypt some data to increase your cybersecurity level
 
 ## Use case
 
@@ -26,7 +29,8 @@ $retrievedData = $sc->decrypt($encryptedData, $userKey);  // To decrypt a string
 
 <?php
 use SecureCipher\Enum\CipherMethod;
-
+...
+...
 $method = CipherMethod::AES_128_CBC->value;                         // "aes-128-cbc";
 $encryptedData = $sc->encrypt($data, $userKey, method);             // You can select another cipher method from Enum\CipherMethod
 $retrievedData = $sc->decrypt($encryptedData, $userKey, method);    // Cipher method must be the same for encryption and decryption 
