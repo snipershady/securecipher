@@ -54,7 +54,7 @@ class SecureCipher {
      * 
      * @param string $data
      * @param string $userKey
-     * @param CipherMethod $method <p>Enumeration case from SecureCipher\Enum\CipherMethod</p>
+     * @param CipherMethod $method <p>Default value AES_256_CBC Enumeration case from SecureCipher\Enum\CipherMethod</p>
      * @return string
      * @throws InvalidArgumentException
      */
@@ -75,7 +75,7 @@ class SecureCipher {
      * 
      * @param string $input
      * @param string $userKey
-     * @param CipherMethod $method <p>Enumeration case from SecureCipher\Enum\CipherMethod</p>
+     * @param CipherMethod $method <p>Default value AES_256_CBC Enumeration case from SecureCipher\Enum\CipherMethod</p>
      * @return string
      * @throws InvalidArgumentException
      */

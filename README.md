@@ -27,11 +27,15 @@ $retrievedData = $sc->decrypt($encryptedData, $userKey);  // To decrypt a string
 
 ``` php
 
+## Cipher Method enumeration.
+The default value is AES_256_CBC, but you can select another one with CipherMethod enumeration instances
+
 <?php
+
+use SecureCipher\Service\SecureCipher;
 use SecureCipher\Enum\CipherMethod;
 ...
 ...
-$method = CipherMethod::AES_128_CBC->value;                         // "aes-128-cbc";
-$encryptedData = $sc->encrypt($data, $userKey, method);             // You can select another cipher method from Enum\CipherMethod
-$retrievedData = $sc->decrypt($encryptedData, $userKey, method);    // Cipher method must be the same for encryption and decryption 
+$encryptedData = $sc->encrypt($data, $userKey, CipherMethod::AES_128_CBC);             // You can select another cipher method from Enum\CipherMethod
+$retrievedData = $sc->decrypt($encryptedData, $userKey, CipherMethod::AES_128_CBC);    // Cipher method must be the same for encryption and decryption 
 ```
