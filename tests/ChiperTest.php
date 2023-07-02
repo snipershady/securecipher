@@ -32,7 +32,7 @@ use SecureCipher\Enum\CipherMethod;
 class ChiperTest extends AbstractTestCase {
 
     public function testBaseString(): void {
-        
+
         $baseKey = "test1";
         $userKey = "test1uk";
         $sc = new SecureCipher($baseKey);
@@ -105,6 +105,32 @@ class ChiperTest extends AbstractTestCase {
         self::assertTrue(hash_equals($retrievedData, $data));
     }
 
+    public function testBaseStringLongKeys(): void {
+        $baseKey = hash("sha3-512", base64_encode("test1"));
+        $userKey = hash("sha3-512", base64_encode("test1uk"));
+        $sc = new SecureCipher($baseKey);
+        $data = "ForzaNapoli";
+        $longData = hash("sha3-512", base64_encode($data));
+        $encryptedData = $sc->encrypt($data, $userKey);
+        $retrievedData = $sc->decrypt($encryptedData, $userKey);
+
+        self::assertEquals($retrievedData, $data);
+        self::assertTrue(hash_equals($retrievedData, $data));
+    }
+
+    public function testBaseStringVeryLongKeysAndData(): void {
+        $baseKey = hash("sha3-512", base64_encode("test1")) . hash("sha3-512", base64_encode("test1")) . hash("sha3-512", base64_encode("test1"));
+        $userKey = hash("sha3-512", base64_encode("test1uk")) . hash("sha3-512", base64_encode("test1")) . hash("sha3-512", base64_encode("test1"));
+        $sc = new SecureCipher($baseKey);
+        $data = "ForzaNapoli";
+        $longData = hash("sha3-512", base64_encode($data)) . hash("sha3-512", base64_encode($data)) . hash("sha3-512", base64_encode($data)) . hash("sha3-512", base64_encode($data));
+        $encryptedData = $sc->encrypt($data, $userKey);
+        $retrievedData = $sc->decrypt($encryptedData, $userKey);
+
+        self::assertEquals($retrievedData, $data);
+        self::assertTrue(hash_equals($retrievedData, $data));
+    }
+
     public function testBaseStringWithWrongUserKeyDecrypt(): void {
         $baseKey = "test1";
         $userKey = "test1uk";
@@ -119,6 +145,20 @@ class ChiperTest extends AbstractTestCase {
         self::assertFalse(hash_equals($retrievedData, $data));
     }
 
+    public function testBaseStringWithWrongUserKeyDecryptAnotherChar(): void {
+        $baseKey = "test1";
+        $userKey = "test1uk";
+        $sc = new SecureCipher($baseKey);
+        $data = "ForzaNapoli";
+        $encryptedData = $sc->encrypt($data, $userKey);
+
+        $wrongUserKey = "test1uk ";
+        $retrievedData = $sc->decrypt($encryptedData, $wrongUserKey);
+
+        self::assertNotEquals($retrievedData, $data);
+        self::assertFalse(hash_equals($retrievedData, $data));
+    }
+
     public function testBaseStringWithWrongBaseKeyDecrypt(): void {
         $baseKey = "test1";
         $userKey = "test1uk";
@@ -127,6 +167,21 @@ class ChiperTest extends AbstractTestCase {
         $encryptedData = $sc->encrypt($data, $userKey);
 
         $scTest = new SecureCipher($baseKey . "_");
+        $wrongUserKey = "test1uk";
+        $retrievedData = $scTest->decrypt($encryptedData, $wrongUserKey);
+
+        self::assertNotEquals($retrievedData, $data);
+        self::assertFalse(hash_equals($retrievedData, $data));
+    }
+
+    public function testBaseStringWithWrongBaseKeyDecryptAnotherEmptyChar(): void {
+        $baseKey = "test1";
+        $userKey = "test1uk";
+        $sc = new SecureCipher($baseKey);
+        $data = "ForzaNapoli";
+        $encryptedData = $sc->encrypt($data, $userKey);
+
+        $scTest = new SecureCipher($baseKey . " ");
         $wrongUserKey = "test1uk";
         $retrievedData = $scTest->decrypt($encryptedData, $wrongUserKey);
 
@@ -149,7 +204,7 @@ class ChiperTest extends AbstractTestCase {
         $userKey = "test1uk";
         $sc = new SecureCipher($baseKey);
         $data = "ForzaNapoli";
-        $method = CipherMethod::AES_128_CBC->value;// "aes-128-cbc";
+        $method = CipherMethod::AES_128_CBC->value; // "aes-128-cbc";
         $encryptedData = $sc->encrypt($data, $userKey, $method);
         $retrievedData = $sc->decrypt($encryptedData, $userKey, $method);
 
