@@ -10,11 +10,9 @@ use function base64_encode;
 use function hash;
 use function hash_equals;
 use function hash_hmac;
-use function in_array;
 use function openssl_cipher_iv_length;
 use function openssl_decrypt;
 use function openssl_encrypt;
-use function openssl_get_cipher_methods;
 use function openssl_random_pseudo_bytes;
 use function substr;
 
@@ -56,19 +54,18 @@ class SecureCipher {
      * 
      * @param string $data
      * @param string $userKey
-     * @param string $method
+     * @param CipherMethod $method <p>Enumeration case from SecureCipher\Enum\CipherMethod</p>
      * @return string
      * @throws InvalidArgumentException
      */
-    public function encrypt(string $data, string $userKey, string $method = CipherMethod::AES_256_CBC->value): string {
-        $this->checkCipherMethod($method);
+    public function encrypt(string $data, string $userKey, CipherMethod $method = CipherMethod::AES_256_CBC): string {
         $this->checkEmptyKey($userKey);
         $this->checkEmptyKey($this->baseKey);
         $firstKey = hash("sha3-512", base64_encode($userKey));
         $secondKey = hash("sha3-512", base64_encode($this->baseKey));
-        $ivLength = (int) openssl_cipher_iv_length($method);
+        $ivLength = (int) openssl_cipher_iv_length($method->value);
         $iv = openssl_random_pseudo_bytes($ivLength);
-        $firstEncrypted = (string) openssl_encrypt($data, $method, $firstKey, OPENSSL_RAW_DATA, $iv);
+        $firstEncrypted = (string) openssl_encrypt($data, $method->value, $firstKey, OPENSSL_RAW_DATA, $iv);
         $secondEncrypted = hash_hmac('sha3-512', $firstEncrypted, $secondKey, true);
         $output = base64_encode($iv . $secondEncrypted . $firstEncrypted);
         return $output;
@@ -78,28 +75,27 @@ class SecureCipher {
      * 
      * @param string $input
      * @param string $userKey
-     * @param string $method
+     * @param CipherMethod $method <p>Enumeration case from SecureCipher\Enum\CipherMethod</p>
      * @return string
      * @throws InvalidArgumentException
      */
-    public function decrypt(string $input, string $userKey, string $method = CipherMethod::AES_256_CBC->value): string {
-        $this->checkCipherMethod($method);
+    public function decrypt(string $input, string $userKey, CipherMethod $method = CipherMethod::AES_256_CBC): string {
         $this->checkEmptyKey($userKey);
         $this->checkEmptyKey($this->baseKey);
         $firstKey = hash("sha3-512", base64_encode($userKey));
         $secondKey = hash("sha3-512", base64_encode($this->baseKey));
         $mix = base64_decode($input);
-        $ivLength = (int) openssl_cipher_iv_length($method);
+        $ivLength = (int) openssl_cipher_iv_length($method->value);
         $iv = substr($mix, 0, $ivLength);
         $secondEncrypted = substr($mix, $ivLength, 64);
         $firstEncrypted = substr($mix, $ivLength + 64);
-        $data = (string) openssl_decrypt($firstEncrypted, $method, $firstKey, OPENSSL_RAW_DATA, $iv);
+        $data = (string) openssl_decrypt($firstEncrypted, $method->value, $firstKey, OPENSSL_RAW_DATA, $iv);
         $secondEncryptedHm = hash_hmac('sha3-512', $firstEncrypted, $secondKey, true);
 
         if (hash_equals($secondEncrypted, $secondEncryptedHm)) {
             return $data;
         } else {
-            return '';
+            return "";
         }
     }
 
@@ -112,19 +108,6 @@ class SecureCipher {
     private function checkEmptyKey(string $key): void {
         if ($key === "") {
             throw new InvalidArgumentException("You cannot use an empty key");
-        }
-    }
-
-    /**
-     * 
-     * @param string $method
-     * @return void
-     * @throws InvalidArgumentException
-     */
-    private function checkCipherMethod(string $method): void {
-        $ciphers = openssl_get_cipher_methods();
-        if (!in_array($method, $ciphers)) {
-            throw new InvalidArgumentException("Invalid Chiper Method");
         }
     }
 }

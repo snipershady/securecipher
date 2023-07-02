@@ -217,22 +217,11 @@ class ChiperTest extends AbstractTestCase {
         $userKey = "test1uk";
         $sc = new SecureCipher($baseKey);
         $data = "ForzaNapoli";
-        $method = CipherMethod::AES_128_CBC->value; // "aes-128-cbc";
+        $method = CipherMethod::AES_128_CBC; // "aes-128-cbc";
         $encryptedData = $sc->encrypt($data, $userKey, $method);
         $retrievedData = $sc->decrypt($encryptedData, $userKey, $method);
 
         self::assertEquals($retrievedData, $data);
         self::assertTrue(hash_equals($retrievedData, $data));
-    }
-
-    public function testBaseStringInvalidCustomChiperMethod(): void {
-        $baseKey = "test1";
-        $userKey = "test1uk";
-        $sc = new SecureCipher($baseKey);
-        $data = "ForzaNapoli";
-        $method = "aes-128-mmt";
-        $this->expectException(InvalidArgumentException::class);
-        $encryptedData = $sc->encrypt($data, $userKey, $method);
-        $retrievedData = $sc->decrypt($encryptedData, $userKey, $method);
     }
 }

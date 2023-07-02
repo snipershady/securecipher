@@ -4,8 +4,8 @@ namespace SecureCipher\Enum;
 
 /**
  * <p>Description of CipherMethod
- * Enum obtained with this a simple script
- * <pre>foreach(openssl_get_cipher_methods() as $m){
+ * Enum obtained with a simple script:
+  <pre>foreach(openssl_get_cipher_methods() as $m){
   file_put_contents("methods.txt", "case ".strtoupper(str_replace("-", "_", $m)) ."='".$m."';".PHP_EOL, FILE_APPEND);
   }</pre></p>
  * @author Stefano Perrini <perrini.stefano@gmail.com> aka La Matrigna
