@@ -44,11 +44,24 @@ class ChiperTest extends AbstractTestCase {
         self::assertTrue(hash_equals($retrievedData, $data));
     }
 
-    public function testBaseLongString(): void {
+    public function testBaseStringVeryLongData(): void {
+
         $baseKey = "test1";
         $userKey = "test1uk";
         $sc = new SecureCipher($baseKey);
         $data = "ForzaNapoli";
+        $encryptedData = $sc->encrypt($data, $userKey);
+        $retrievedData = $sc->decrypt($encryptedData, $userKey);
+
+        self::assertEquals($retrievedData, $data);
+        self::assertTrue(hash_equals($retrievedData, $data));
+    }
+
+    public function testBaseLongString(): void {
+        $baseKey = base64_encode(hash("sha3-512", "baseKeyTest") . hash("sha3-512", "baseKeyTestTwo") . hash("sha3-512", "baseKeyTestThree"));
+        $userKey = base64_encode(hash("sha3-512", "UserKeyTest") . hash("sha3-512", "baseKeyTestTwo") . hash("sha3-512", "baseKeyTestThree"));
+        $sc = new SecureCipher($baseKey);
+        $data = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
         $longData = hash("sha3-512", base64_encode($data));
         $encryptedData = $sc->encrypt($data, $userKey);
         $retrievedData = $sc->decrypt($encryptedData, $userKey);
